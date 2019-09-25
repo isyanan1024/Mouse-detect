@@ -1,4 +1,0 @@
-### MOUSE DETECT
-
-### First
-
