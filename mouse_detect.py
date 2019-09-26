@@ -1,5 +1,8 @@
+import os
 import cv2
-from yes_or_no import istrue
+
+from collections import OrderedDict
+from mouseClassify import ismouse
 
 # 读取视频
 camera = cv2.VideoCapture('./mouse003_m.mp4')
@@ -9,6 +12,7 @@ history = 25
 bs = cv2.createBackgroundSubtractorKNN(detectShadows=False)
 bs.setHistory(history)
 
+index = 0
 frames = 0
 while True:
     res, frame = camera.read()
@@ -46,13 +50,39 @@ while True:
             cut_image=frame[y_start:y_end,x_start:x_end]
             
             # 第二个过滤条件，使用二分类判断目标是否是老鼠
-            bo=istrue(cut_image)
+            bo=ismouse(cut_image)
             if bo:
                 # 将目标画出来
                 cv2.rectangle(frame, (x_start, y_end), (x_end,y_start),(0,255,0), 2)
 
     # 显示最终图像
-    cv2.namedWindow('video',cv2.WINDOW_GUI_NORMAL)
-    cv2.imshow('video',frame)
-    if cv2.waitKey(110) & 0xff == 27:
-         break
+    # cv2.namedWindow('video',cv2.WINDOW_GUI_NORMAL)
+    # cv2.imshow('video',frame)
+    # if cv2.waitKey(110) & 0xff == 27:
+    #      break
+
+    # 保存图片
+    if not os.path.exists('result'):
+        os.mkdir('result')
+    cv2.imwrite('result/' + str(index) + '.jpg', frame)
+    index += 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
